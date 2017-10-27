@@ -6,7 +6,7 @@ Q: How do we use constraint propagation to solve the naked twins problem?
 A: Constraint propagation employs two strategies, 
  - Eliminating a value x from a square's peers, if the square has the value x as its possible value.
  - If there is only one possible place for a value within a unit, the value should be placed there.
-In the case of naked twins, a pair of values xa are permitted to be in two boxes within a unit.
+>In the case of naked twins, a pair of values xa are permitted to be in two boxes within a unit.
 although it is not clear which of the two boxes each value belongs to, we apply the constrain propagation
  strategy to these two boxes hence excluding/limiting the values x and a from every other box within the unit 
  and restricting them only to the 2 boxes they appear in.
