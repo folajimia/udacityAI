@@ -29,7 +29,17 @@ diagonal_unit = [[r+c for r, c in zip(rows, cols)],[r+c for r, c in zip(rows[::-
 unitlist = row_units + column_units + square_units + diagonal_unit
 
 # Create a dictionary of peers of each box
+
+# Create a dictionary where a box is set as key and the unit it belongs to is set as value
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
+"""
+sum(units[s],[]) joins the three unit in units ie if units is unit[s] = [1,2,3],[4,5,6],[9,8,7]]
+sum(units[s],[]) = [1,2,3,4,5,6,9,8,7]
+if s=4
+set(sum(units[s],[]))-set([s])) =[1,2,3,5,6,9,8,7]
+peers is created by. merging units and removing the key
+hence a dicionary with key mapped to all in set except key)
+"""
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
 
