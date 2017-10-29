@@ -1,4 +1,39 @@
 # Artificial Intelligence Nanodegree
+Sudoku
+Sudoku  is a logic-based, combinatorial, number-placement puzzle. The objective is to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 subgrids that compose the grid (also called "boxes", "blocks", or "regions") contains all of the digits from 1 to 9. The puzzle setter provides a partially completed grid, which for a well-posed puzzle has a single solution.[1]
+
+Completed games are always a type of Latin square with an additional constraint on the contents of individual regions. For example, the same single integer may not appear twice in the same row, column, or any of the nine 3×3 subregions of the 9x9 playing board.
+
+Basic Sudoku rules
+
+The objective of the game is to fill the table with numbers from 1 to 9, while meeting the following conditions:
+
+- There should be no column with two identical numbers
+- There should be no row with two identical numbers
+- Each 3 x 3 subgrid found in the grid should not have two identical numbers
+
+There is a sudoku variation refered to as diagonal Sudoku, here in addition to the stated rules, the diagonals on the board should not have two diagonal numbers.
+
+
+Sudoku A.I
+The main aim of this project is to build an intelligent agent that will solve every possible sudoku using two well known A.I Techniques.
+
+A.I techniques to solve Sudoku
+
+Constraint Propagation
+When trying to solve a constraint satisfaction problem, you'll find that there are three components, the variables,domains and the constraint[2]. To solve the problem within a domain space, constraints help you narrow the possibilities for the answer, which can be very helpful. constraints are applied iteratively to narrow a search space(domain). Constraint propagation can be used to solve a variety of problems such as calendar scheduling, and cryptographic puzzles.
+
+Search
+While solving a proble, solving, one can get to a stage where there are two or more options left. What do we do? What if we branch out and consider both of them? Maybe one of them will lead us to a position in which three or more possibilities are available. Then, we can branch out again. At the end, we can create a whole tree of possibilities and find ways to traverse the tree until we find our solution. This is an example of how search can be used.
+These ideas may seem simple and they're actually intended to be! Through this lesson you'll see how AI is really composed of very simple ideas that can be put together to solve complex problems. Throughout this lesson, we challenge you to think of how you can apply these ideas to build AI agents to solve other puzzles and problems in your world!
+
+Naming convention
+Boxes:These are individual squares at the intersection of rows and columns. Boxes have the labels 'A1', 'A2', ..., 'I9'.
+Units:These are complete rows, complete columns, and 3x3 squares. Each of the units have 9 boxes. Th board has 27 units in total.
+Peers: These For a box 'A1', the other boxes that belong to the same common unit are its peer.
+
+
+
 ## Introductory Project: Diagonal Sudoku Solver
 
 # Question 1 (Naked Twins)
@@ -50,3 +85,6 @@ To submit your code to the project assistant, run `udacity submit` from within t
 
 This process will create a zipfile in your top-level directory named sudoku-<id>.zip.  This is the file that you should submit to the Udacity reviews system.
 
+[1] Wikipedi:https://en.wikipedia.org/wiki/Sudoku
+[2]Artificial intelligence a modern approach.
+[
