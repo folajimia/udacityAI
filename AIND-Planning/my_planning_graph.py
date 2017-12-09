@@ -314,46 +314,20 @@ class PlanningGraph():
         #new_a_node = set()
         self.a_levels.append(set())
         for action in self.all_actions:
-            new_a = PgNode_a(action)
-            if  new_a.prenodes.issubset(self.s_levels[level]):
-                self.a_levels[level].add(new_a)
+            #Create an action node used to confirm if the action
+            # are a subset of the previous s level.
+            #if they are indeed the action they should be added to the  A level
+            new_a_node = PgNode_a(action)
+            if new_a_node.prenodes.issubset(self.s_levels[level]):
+                self.a_levels[level].add(new_a_node)
                 #connect the a and s nodes
                 for s_node in self.s_levels[level]:
-                    if s_node in new_a.prenodes:
-                        new_a.parents.add(s_node)
-                        s_node.children.add(new_a)
+                    if s_node in new_a_node.prenodes:
+                        new_a_node.parents.add(s_node)
+                        s_node.children.add(new_a_node)
                         #new_a_node.add(new_a)
         #self.a_levels.append(new_a_node)
 
-
-
-
-
-
-
-        """
-        self.a_levels.append(set())
-        for action in self.all_actions:
-            new_a_node = PgNode_a(action)
-            for s_node in new_a_node.prenodes:
-                self.s_levels[level].add(new_a_node) # replaced a_levels with s_levels
-                new_a_node.parents.add(s_node)
-                s_node.children.add(new_a_node)
-        """
-        """
-                action_nodes = set()
-                for action in self.all_actions:
-                    node = PgNode_a(action)
-                    # Only consider actions that are reachable by previous level's literals
-                    if node.prenodes.issubset(self.s_levels[level]):
-                        # Add node and make children and parent connections
-                        action_nodes.add(node)
-                        for state_node in self.s_levels[level]:
-                            state_node.children.add(node)
-                            node.parents.add(state_node)
-                # Update planning graph
-                self.a_levels.append(action_nodes)
-        """
 
     def add_literal_level(self, level):
 
@@ -378,38 +352,16 @@ class PlanningGraph():
         self.s_levels.append(set())
         for a_node in self.a_levels[level - 1]:
             for s_node in a_node.effnodes:
-                if s_node.symbol:
+                if s_node.symbol: #literial is a child if its effect is literal
                     self.s_levels[level].add(s_node)
                     a_node.children.add(s_node)
                     s_node.parents.add(a_node)
         #self.s_levels.append(new_s_nodes)
 
 
-        """
-        #add set to state level
-        self.s_levels.append(set())
-        for a_node in self.a_levels[level - 1]:
-        #add literals from the effects nodes not from the previous levels actions
-            for s_node in a_node.effnodes:
-        # add state node and make children and parent connection
-                #self.s_levels[level].add(new_s_node)
-                #new_s_node.children.add(a_node)
-                #a_node.parents.add(new_s_node)
-                a_node.children.add(s_node)
-                s_node.parents.add(a_node)
-                self.s_levels.add(s_node)
-        """
 
 
-        """
-        self.s_levels.append(set())
 
-        for a_node in self.a_levels[level - 1]:
-            if new_s_node in a_node.effnodes:
-                self.s_levels[level].add(new_s_node)
-                a_node.parents.add(new_s_node)
-                new_s_node.children.add(a_node)
-        """
 
 
     def update_a_mutex(self, nodeset):
@@ -520,14 +472,7 @@ class PlanningGraph():
         """
 
         # TODO test for Competing Needs between nodes
-        """
-        for condition in node_a1.action.precond_pos:
-            if condition in node_a2.action.precond_neg:
-                return True
-        for condition in node_a2.action.precond_pos:
-            if condition in node_a1.action.precond_neg:
-                return True
-        """
+
         for parent_a1 in node_a1.parents:
             for parent_a2 in node_a2.parents:
                 if parent_a1.is_mutex(parent_a2):
@@ -578,11 +523,6 @@ class PlanningGraph():
         return (node_s1.symbol == node_s2.symbol) and (node_s1.is_pos != node_s2.is_pos)
 
 
-
-
-
-        #return node_s1.__eq__(node_s2)
-
     def inconsistent_support_mutex(self, node_s1: PgNode_s, node_s2: PgNode_s):
         """
         Test a pair of state literals for mutual exclusion, returning True if
@@ -608,9 +548,6 @@ class PlanningGraph():
         return True
 
 
-
-        return True
-
     def h_levelsum(self) -> int:
         """The sum of the level costs of the individual goals (admissible if goals independent)
 
@@ -625,20 +562,6 @@ class PlanningGraph():
                     level_sum += level
                     break
 
-
-
-            """
-            #Determine which level is the first level where a goal appears.
-            check = False
-            for level in range(len(self.s_levels)):
-                for state in self.s_levels[level]:
-                    if goal == state.literal:
-                        check = True
-                        level_sum += level
-                        break
-                    if check:
-                        break
-            """
 
         # TODO implement
         # for each goal in the problem, determine the level cost, then add them together
