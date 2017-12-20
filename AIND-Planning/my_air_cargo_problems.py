@@ -12,6 +12,8 @@ from my_planning_graph import PlanningGraph
 from functools import lru_cache
 
 
+
+
 class AirCargoProblem(Problem):
     def __init__(self, cargos, planes, airports, initial: FluentState, goal: list):
         """
@@ -64,19 +66,17 @@ class AirCargoProblem(Problem):
 
 
             # TODO create all load ground actions from the domain Load action
-            for a in self.airports:
+            for c in self.cargos:
                 for p in self.planes:
-                    for c in self.cargos:
-
-                    precond_pos = [expr("At({}, {})".format(c, a)), expr("At({}, {})".format(p, a))]
-                    precond_neg = []
-                    effect_add = [expr("In(c, p)".format(c, p))]
-                    effect_rem = [expr("At(c, p)".format(c, a))]
-                    load = Action(expr("Load(c, p, a)"),
-                                               [precond_pos, precond_neg],
-                                        [effect_add, effect_rem])
-                    loads.append(load)
+                    for a in self.airports:
+                        precond_pos = [expr("At({},{})".format(p, a)), expr("At({},{})".format(c, a))]
+                        precond_neg = []
+                        effect_add = [expr("In({},{})".format(c, p))]
+                        effect_rem = [expr("At({},{})".format(c, a))]
+                        load = Action(expr("Load({},{},{})".format(c,p,a)),[precond_pos,precond_neg],[effect_add,effect_rem])
+                        loads.append(load)
             return loads
+
 
         def unload_actions():
             """Create all concrete Unload actions and return a list
@@ -85,17 +85,15 @@ class AirCargoProblem(Problem):
             """
             unloads = []
             # TODO create all Unload ground actions from the domain Unload action
-            for a in self.airports:
+            for c in self.cargos:
                 for p in self.planes:
-                    for c in self.cargos:
+                    for a in self.airports:
 
-                        precond_pos =[expr("In({}, {})".format(c, p)), expr("At({}, {})".format(p, a))]
+                        precond_pos =[expr("At({},{})".format(p, a)), expr("In({},{})".format(c, p))]
                         precond_neg = []
-                        effect_add = [expr("At({}, {})".format(c, a))]
+                        effect_add = [expr("At({},{})".format(c, a))]
                         effect_rem =[expr("In({},{})".format(c, p))]
-                        unload = Action(expr("Unload(c, p, a)"),
-                                        [precond_pos, precond_neg],
-                                        [effect_add, effect_rem])
+                        unload = Action(expr("Unload({},{},{})".format(c,p,a)),[precond_pos, precond_neg],[effect_add, effect_rem])
                         unloads.append(unload)
             return unloads
 
@@ -120,7 +118,7 @@ class AirCargoProblem(Problem):
                             flys.append(fly)
             return flys
 
-        return list(load_actions() + unload_actions() + fly_actions())
+        return load_actions() + unload_actions() + fly_actions()
 
     def actions(self, state: str) -> list:
         """ Return the actions that can be executed in the given state.
@@ -346,5 +344,7 @@ def air_cargo_p3() -> AirCargoProblem:
             ]
 
     return AirCargoProblem(cargos, planes, airports, init, goal)
+
+
 
 

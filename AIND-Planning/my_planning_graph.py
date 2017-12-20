@@ -311,7 +311,6 @@ class PlanningGraph():
         #   to see if a proposed PgNode_a has prenodes that are a subset of the previous S level.  Once an
         #   action node is added, it MUST be connected to the S node instances in the appropriate s_level set.
 
-        #new_a_node = set()
         self.a_levels.append(set())
         for action in self.all_actions:
             #Create an action node used to confirm if the action
@@ -322,11 +321,11 @@ class PlanningGraph():
                 self.a_levels[level].add(new_a_node)
                 #connect the a and s nodes
                 for s_node in self.s_levels[level]:
-                    if s_node in new_a_node.prenodes:
-                        new_a_node.parents.add(s_node)
+                    #if s_node in new_a_node.prenodes:
+
                         s_node.children.add(new_a_node)
-                        #new_a_node.add(new_a)
-        #self.a_levels.append(new_a_node)
+                        new_a_node.parents.add(s_node)
+
 
 
     def add_literal_level(self, level):
@@ -348,20 +347,14 @@ class PlanningGraph():
         #   all of the new S nodes as children of all the A nodes that could produce them, and likewise add the A nodes to the
         #   parent sets of the S nodes
 
-        #new_s_nodes =set()
         self.s_levels.append(set())
         for a_node in self.a_levels[level - 1]:
             for s_node in a_node.effnodes:
                 if s_node.symbol: #literial is a child if its effect is literal
                     self.s_levels[level].add(s_node)
-                    a_node.children.add(s_node)
+
                     s_node.parents.add(a_node)
-        #self.s_levels.append(new_s_nodes)
-
-
-
-
-
+                    a_node.children.add(s_node)
 
 
     def update_a_mutex(self, nodeset):
@@ -424,10 +417,11 @@ class PlanningGraph():
         for effect in node_a1.action.effect_add:
             if effect in node_a2.action.effect_rem:
                 return True
-        for effect in node_a2.action.effect_rem:
-            if effect in node_a1.action.effect_add:
+        for effect in node_a2.action.effect_add:
+            if effect in node_a1.action.effect_rem:
                 return True
         return False
+
 
     def interference_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
@@ -457,8 +451,8 @@ class PlanningGraph():
             if effect in node_a1.action.precond_pos:
                 return True
 
-            return True
         return False
+
 
     def competing_needs_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
@@ -548,11 +542,14 @@ class PlanningGraph():
         return True
 
 
+
     def h_levelsum(self) -> int:
         """The sum of the level costs of the individual goals (admissible if goals independent)
 
         :return: int
         """
+        # TODO implement
+        # for each goal in the problem, determine the level cost, then add them together
         level_sum = 0
         for goal in self.problem.goal:
             node = PgNode_s(goal, True)
@@ -563,6 +560,4 @@ class PlanningGraph():
                     break
 
 
-        # TODO implement
-        # for each goal in the problem, determine the level cost, then add them together
         return level_sum
