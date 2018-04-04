@@ -1,0 +1,8 @@
+images/
+lfw/
+mixed_images/
+bottleneck_features/
+dogImages/
+__pycache__/
+
+
